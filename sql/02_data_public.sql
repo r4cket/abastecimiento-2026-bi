@@ -1,15 +1,10 @@
--- Generado por build_data_sql.py desde Analisis_Abastecimiento_2026.xlsx
--- servicios=5 articulos=676 pac_item=984 despacho=3552 cadena=1184 compra=91 casos=98
--- version --public: compra.solicitante/actor_estado/ejecutivo_asignado -> NULL
 BEGIN;
-
 INSERT INTO servicio (nombre, es_agrupador) VALUES
     ('PABELLON', FALSE),
     ('SERVICIO CLINICO CIRUGIA', FALSE),
     ('SERVICIO GINECOLOGIA', FALSE),
     ('SERVICIO OBSTETRICIA', FALSE),
     ('SERVICIO OBSTETRICIA Y GINECOLOGIA', TRUE);
-
 INSERT INTO articulo (codigo_cgcom, descripcion, um, precio_ref) VALUES
     ('10-100-210-215-00', 'SOLUCION ALCOHOL 70% 1000 ML', 'FC', NULL),
     ('10-100-210-370-00', 'CLORO EN POLVO X 8 GR', 'BS', 59.0),
@@ -687,7 +682,6 @@ INSERT INTO articulo (codigo_cgcom, descripcion, um, precio_ref) VALUES
     ('30-020-520-670-00', 'SILLA DE RUEDA BARIATRICA (OBESOS) 58 CMS ANCHO', 'UD', NULL),
     ('30-050-080-195-00', 'REFRIGERADOR CLINICO', 'UD', NULL),
     ('31-200-600-150-00', 'MONITOR MULTIPARAMETRO', 'UD', NULL);
-
 INSERT INTO pac_item (servicio, codigo_cgcom, cant_inicial_anual, cant_modificado_anual, cant_inicial_eneago, cant_modificado_eneago, en_inicial, en_modificado, tipo_cambio, variacion_pct) VALUES
     ('PABELLON', '10-100-210-370-00', 2400.0, 2400.0, 1600.0, 1600.0, TRUE, TRUE, 'Sin cambio', 0.0),
     ('PABELLON', '10-100-211-007-00', 384.0, 384.0, 256.0, 256.0, TRUE, TRUE, 'Sin cambio', 0.0),
@@ -1673,7 +1667,6 @@ INSERT INTO pac_item (servicio, codigo_cgcom, cant_inicial_anual, cant_modificad
     ('SERVICIO OBSTETRICIA', '20-100-060-1674-00', 0.0, 160.0, 0.0, 80.0, FALSE, TRUE, 'Incorporado (nuevo en modificado)', NULL),
     ('SERVICIO OBSTETRICIA', '20-100-070-041-00', 12.0, 13.0, 8.0, 10.0, TRUE, TRUE, 'Aumentó', 0.08333333333333333),
     ('SERVICIO OBSTETRICIA', '20-100-070-181-00', 0.0, 350.0, 0.0, 350.0, FALSE, TRUE, 'Incorporado (nuevo en modificado)', NULL);
-
 INSERT INTO despacho_mensual (periodo, servicio, codigo_cgcom, bodega, cant_solicitada, cant_despachada) VALUES
     (DATE '2026-01-01', 'PABELLON', '10-100-211-216-00', 'BODEGA DE FARMACIA', 20.0, 20.0),
     (DATE '2026-01-01', 'PABELLON', '10-200-222-013-00', 'BODEGA DE FARMACIA', 20.0, 20.0),
@@ -5227,7 +5220,6 @@ INSERT INTO despacho_mensual (periodo, servicio, codigo_cgcom, bodega, cant_soli
     (DATE '2026-08-01', 'SERVICIO OBSTETRICIA', '20-090-055-049-00', 'BODEGA DE ECONOMATO', 50.0, 50.0),
     (DATE '2026-08-01', 'SERVICIO OBSTETRICIA', '20-100-060-1674-00', 'BODEGA DE FARMACIA', 20.0, 20.0),
     (DATE '2026-08-01', 'SERVICIO OBSTETRICIA', '30-020-070-713-00', 'BODEGA DE ECONOMATO', 1.0, 1.0);
-
 INSERT INTO cadena_item (servicio, codigo_cgcom, pac_inicial_eneago, pac_modificado_eneago, cant_solicitada, cant_despachada, desv_solicitud_vs_mod, desv_pct_solicitud_vs_mod, cumplimiento_pct, en_algun_pac, fue_solicitado, situacion) VALUES
     ('PABELLON', '10-100-210-215-00', 0.0, 0.0, 10.0, 10.0, 10.0, NULL, 1.0, FALSE, TRUE, 'Solicitado sin estar en PAC (demanda no planificada)'),
     ('PABELLON', '10-100-210-370-00', 1600.0, 1600.0, 1600.0, 1500.0, 0.0, 0.0, 0.9375, TRUE, TRUE, 'Planificado y solicitado'),
@@ -6413,7 +6405,6 @@ INSERT INTO cadena_item (servicio, codigo_cgcom, pac_inicial_eneago, pac_modific
     ('SERVICIO OBSTETRICIA', '30-010-510-527-00', 0.0, 0.0, 1.0, 1.0, 1.0, NULL, 1.0, FALSE, TRUE, 'Solicitado sin estar en PAC (demanda no planificada)'),
     ('SERVICIO OBSTETRICIA', '30-020-070-713-00', 0.0, 0.0, 1.0, 1.0, 1.0, NULL, 1.0, FALSE, TRUE, 'Solicitado sin estar en PAC (demanda no planificada)'),
     ('SERVICIO OBSTETRICIA', '31-200-600-150-00', 0.0, 0.0, 2.0, 2.0, 2.0, NULL, 1.0, FALSE, TRUE, 'Solicitado sin estar en PAC (demanda no planificada)');
-
 INSERT INTO compra (n_solicitud, servicio, tipo_compra, solicitante, fecha_creacion, periodo, estado_original, estado_categoria, actor_estado, atribucion, ejecutivo_asignado, fecha_asignacion, dias_hasta_asignacion, monto_original, monto_limpio, monto_confiable, cerrada, archivo_origen) VALUES
     ('S-COM-11962', 'PABELLON', 'Compra', NULL, '2026-04-23 16:23:42', '2026-04-01', 'Anulada Jefe Departamento', 'Anulada', NULL, 'b) Servicio solicitante', NULL, NULL, NULL, '0', 0.0, TRUE, FALSE, 'Listado_Pabellon.xlsx'),
     ('S-COM-11964', 'PABELLON', 'Compra', NULL, '2026-04-24 18:23:37', '2026-04-01', 'Anulada Jefe Departamento', 'Anulada', NULL, 'b) Servicio solicitante', NULL, NULL, NULL, '0', 0.0, TRUE, FALSE, 'Listado_Pabellon.xlsx'),
@@ -6506,7 +6497,6 @@ INSERT INTO compra (n_solicitud, servicio, tipo_compra, solicitante, fecha_creac
     ('S-COM-12307', 'SERVICIO OBSTETRICIA Y GINECOLOGIA', 'Compra', NULL, '2026-08-03 09:25:34', '2026-08-01', 'Derivada A Ejecutivo De Compra', 'En proceso (derivada)', NULL, 'a) Abastecimiento (en tramitación activa)', NULL, '2026-08-12 14:05:49', 9.194618055560568, '$12.200.000', 12200000.0, TRUE, FALSE, 'Listado_Gineco_Obstetricia.xlsx'),
     ('S-COM-12308', 'SERVICIO OBSTETRICIA Y GINECOLOGIA', 'Compra', NULL, '2026-08-03 09:36:59', '2026-08-01', 'Anulada Por Jefe Compra', 'Anulada', NULL, 'a) Abastecimiento (interno)', NULL, '2026-08-11 10:06:20', 8.02038194443594, '$3.278.000', 3278000.0, TRUE, FALSE, 'Listado_Gineco_Obstetricia.xlsx'),
     ('S-COM-12415', 'SERVICIO OBSTETRICIA Y GINECOLOGIA', 'Compra', NULL, '2026-08-26 16:15:38', '2026-08-01', 'Derivada A Dirección', 'En proceso (derivada)', NULL, 'a) Abastecimiento (en tramitación activa)', NULL, NULL, NULL, '200', 200.0, TRUE, FALSE, 'Listado_Gineco_Obstetricia.xlsx');
-
 INSERT INTO caso_reprogramacion (servicio, codigo_cgcom, descripcion, pac_inicial_eneago, pac_modificado_eneago, cant_solicitada, var_pct_ini_mod, var_pct_mod_sol) VALUES
     ('SERVICIO OBSTETRICIA', '10-200-225-240-00', 'GUANTE PROCED. SMALL', 8700.0, 35300.0, 13500.0, 3.057471264367816, -0.6175637393767706),
     ('SERVICIO GINECOLOGIA', '10-200-225-240-00', 'GUANTE PROCED. SMALL', 8700.0, 35300.0, 13200.0, 3.057471264367816, -0.6260623229461756),
@@ -6606,5 +6596,4 @@ INSERT INTO caso_reprogramacion (servicio, codigo_cgcom, descripcion, pac_inicia
     ('SERVICIO OBSTETRICIA', '10-200-222-663-00', 'CANULA INTRAVENOSA 24 G 19 MM SIN PROTECCION', 136.0, 51.0, 17.0, -0.625, -0.6666666666666666),
     ('PABELLON', '10-200-222-055-00', 'CONECTOR S/AGUJA ANTIREFLUJO', 100.0, 50.0, 100.0, -0.5, 1.0),
     ('SERVICIO CLINICO CIRUGIA', '10-200-222-794-00', 'TUBO SILICONA 8 X 12 MM', 25.0, 50.0, 25.0, 1.0, -0.5);
-
 COMMIT;
