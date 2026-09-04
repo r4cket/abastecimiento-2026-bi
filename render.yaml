@@ -1,0 +1,28 @@
+# render.com -> New -> Blueprint -> apuntar a este repo (repo = esta carpeta).
+# Los envVars con sync:false se completan a mano en el panel (Environment).
+services:
+  - type: web
+    name: abastecimiento-2026
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/health
+    envVars:
+      - key: GF_SERVER_HTTP_PORT
+        value: "10000"
+      - key: GF_SERVER_ROOT_URL
+        value: https://abastecimiento-2026.onrender.com   # ajusta al nombre real que quede
+      - key: GF_SECURITY_ADMIN_PASSWORD
+        sync: false
+      - key: PG_HOST
+        sync: false
+      - key: PG_PORT
+        value: "5432"
+      - key: PG_DATABASE
+        sync: false
+      - key: PG_USER
+        sync: false
+      - key: PG_PASSWORD
+        sync: false
+      - key: PG_SSLMODE
+        value: require

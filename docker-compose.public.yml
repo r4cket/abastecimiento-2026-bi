@@ -1,0 +1,39 @@
+# Prueba local de la imagen PUBLICA antes de subirla a Render.
+# (Requiere Docker; este PC no tiene, pero sirve en la maquina que despliegue.)
+#
+#   docker compose -f docker-compose.public.yml up --build
+#   -> http://localhost:3002   (anonimo, solo lectura; admin en /login)
+#
+# Siembra Postgres con sql/01_schema.sql + sql/02_data_public.sql (SIN nombres).
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: abastecimiento_bi
+      POSTGRES_USER: abast_ro
+      POSTGRES_PASSWORD: prueba_local
+    volumes:
+      - ./sql:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U abast_ro"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  grafana:
+    build: .
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: prueba_local
+      GF_SERVER_ROOT_URL: http://localhost:3002
+      GF_SERVER_HTTP_PORT: "3000"
+      PG_HOST: postgres
+      PG_PORT: "5432"
+      PG_DATABASE: abastecimiento_bi
+      PG_USER: abast_ro
+      PG_PASSWORD: prueba_local
+      PG_SSLMODE: disable
+    ports:
+      - "3002:3000"
