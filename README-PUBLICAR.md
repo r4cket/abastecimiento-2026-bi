@@ -116,16 +116,29 @@ git push -u origin main
 
 ---
 
-## Actualizar los datos (cuando haya un Excel nuevo)
+## Actualizar los datos (cuando lleguen crudos nuevos a las 4 carpetas)
 
 ```powershell
 cd "…/cloudeABAST/TRABAJOppt/bi/loader"
-py build_data_sql.py --public      # regenera bi/deploy/sql/02_data_public.sql
+py build_data_sql.py               # regenera bi/postgres/init/02_data.sql (local, completo)
+py build_data_sql.py --public      # regenera bi/deploy/sql/02_data_public.sql (anonimo)
 py build_dashboard.py              # si cambiaste paneles
 ```
-Luego en el **SQL Editor de Neon**: corre otra vez `01_schema.sql` (borra y
-recrea) y el nuevo `02_data_public.sql`. Grafana lee en vivo, no hay que
-redeployar. Si cambió el JSON del dashboard, haz `git push` y Render reconstruye.
+
+`02_data_public.sql` pesa ~5 MB (todas las unidades) — **no se puede pegar en el
+SQL Editor de Neon**. Cargá por `psql` (el del stack portátil sirve):
+
+```powershell
+$psql = 'C:\Users\usuario_minsal\hospital-bi-local\pgsql\bin\psql.exe'
+$env:PGPASSWORD = '<password de Neon>'
+$env:PGSSLMODE  = 'require'
+$c = @('-h','ep-red-math-ac53qs55.sa-east-1.aws.neon.tech','-U','neondb_owner','-d','neondb','-v','ON_ERROR_STOP=1')
+& $psql @c -f "..\deploy\sql\01_schema.sql"      # borra y recrea (vacío)
+& $psql @c -f "..\deploy\sql\02_data_public.sql" # repuebla
+```
+
+Grafana lee en vivo, no hay que redeployar por datos. Si cambió el JSON del
+dashboard: `git push` en `bi/deploy/` y Render reconstruye solo (~3-5 min).
 
 ---
 
