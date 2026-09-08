@@ -2133,6 +2133,107 @@
           }
         }
       ]
+    },
+    {
+      "id": 39,
+      "type": "row",
+      "title": "Vistas ampliadas (ECharts) — todas las unidades",
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 169
+      },
+      "panels": []
+    },
+    {
+      "id": 40,
+      "type": "volkovlabs-echarts-panel",
+      "title": "Mapa de volumen — unidades solicitadas Ene-Ago por unidad (área ∝ cantidad)",
+      "datasource": {
+        "type": "postgres",
+        "uid": "abastecimiento_bi"
+      },
+      "gridPos": {
+        "h": 15,
+        "w": 24,
+        "x": 0,
+        "y": 170
+      },
+      "options": {
+        "getOption": "const s=(context.panel.data.series||[])[0];if(!s||!s.fields||!s.fields.length){return {title:{text:'sin datos',left:'center',top:'center'}};}const col={};s.fields.forEach(fx=>{col[fx.name]=(fx.values&&fx.values.toArray)?fx.values.toArray():(fx.values||[]);});const C=s.fields.map(fx=>fx.name);const N=col[C[0]]||[],V=(col[C[1]]||[]).map(Number);const data=N.map((n,i)=>({name:String(n),value:V[i]||0})).filter(d=>d.value>0).sort((a,b)=>b.value-a.value);return {tooltip:{formatter:p=>p.name+': '+(p.value||0).toLocaleString('es-CL')},series:[{type:'treemap',roam:false,nodeClick:false,breadcrumb:{show:false},label:{show:true,formatter:'{b}',fontSize:10,overflow:'truncate'},itemStyle:{borderColor:'#fff',borderWidth:1,gapWidth:1},levels:[{color:['#3b82f6','#22c55e','#f59e0b','#ef4444','#8b5cf6','#14b8a6']}],data:data}]};",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": {},
+          "name": "default"
+        },
+        "editor": {
+          "format": "auto",
+          "height": 600
+        },
+        "visualEditor": {
+          "code": "",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT servicio AS unidad, SUM(cant_solicitada) AS valor\nFROM cadena_item WHERE servicio IN (${servicio:singlequote})\nGROUP BY servicio HAVING SUM(cant_solicitada) > 0\nORDER BY valor DESC",
+          "datasource": {
+            "type": "postgres",
+            "uid": "abastecimiento_bi"
+          }
+        }
+      ]
+    },
+    {
+      "id": 41,
+      "type": "volkovlabs-echarts-panel",
+      "title": "Cumplimiento de despacho — unidad × mes (top 35 por volumen solicitado)",
+      "datasource": {
+        "type": "postgres",
+        "uid": "abastecimiento_bi"
+      },
+      "gridPos": {
+        "h": 20,
+        "w": 24,
+        "x": 0,
+        "y": 185
+      },
+      "options": {
+        "getOption": "const s=(context.panel.data.series||[])[0];if(!s||!s.fields||!s.fields.length){return {title:{text:'sin datos',left:'center',top:'center'}};}const col={};s.fields.forEach(fx=>{col[fx.name]=(fx.values&&fx.values.toArray)?fx.values.toArray():(fx.values||[]);});const C=s.fields.map(fx=>fx.name);const U=(col[C[0]]||[]).map(String),M=(col[C[1]]||[]).map(String),V=(col[C[2]]||[]).map(Number);const xs=[...new Set(M)],ys=[...new Set(U)];const data=U.map((u,i)=>[xs.indexOf(M[i]),ys.indexOf(u),V[i]]);return {tooltip:{position:'top',formatter:p=>ys[p.value[1]]+' / '+xs[p.value[0]]+': '+(p.value[2]*100).toFixed(0)+'%'},grid:{left:170,right:16,top:8,bottom:56},xAxis:{type:'category',data:xs,splitArea:{show:true}},yAxis:{type:'category',data:ys,inverse:true,splitArea:{show:true},axisLabel:{fontSize:10}},visualMap:{min:0,max:1,calculable:true,orient:'horizontal',left:'center',bottom:4,text:['100%','0%'],inRange:{color:['#d73027','#fee08b','#1a9850']}},series:[{type:'heatmap',data:data,progressive:0,emphasis:{itemStyle:{shadowBlur:6,shadowColor:'rgba(0,0,0,0.3)'}}}]};",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": {},
+          "name": "default"
+        },
+        "editor": {
+          "format": "auto",
+          "height": 600
+        },
+        "visualEditor": {
+          "code": "",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH top AS (\n       SELECT servicio, SUM(cant_solicitada) AS sol\n       FROM despacho_mensual WHERE servicio IN (${servicio:singlequote})\n       GROUP BY servicio ORDER BY sol DESC LIMIT 35)\nSELECT dm.servicio AS unidad,\n       to_char(dm.periodo,'YYYY-MM') AS mes,\n       ROUND(SUM(dm.cant_despachada)/NULLIF(SUM(dm.cant_solicitada),0), 4) AS cumplimiento\nFROM despacho_mensual dm JOIN top t ON t.servicio = dm.servicio\nWHERE EXTRACT(MONTH FROM periodo)::int::text IN (${mes:singlequote})\nGROUP BY dm.servicio, dm.periodo, t.sol\nORDER BY t.sol DESC, dm.periodo",
+          "datasource": {
+            "type": "postgres",
+            "uid": "abastecimiento_bi"
+          }
+        }
+      ]
     }
   ]
 }

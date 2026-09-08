@@ -6,6 +6,12 @@
 # Ver README-PUBLICAR.md.
 FROM grafana/grafana-oss:11.2.0
 
+# Panel ECharts (Volkov Labs, firmado) horneado en la imagen -> no depende de red
+# en el arranque (importante en la capa gratis con cold start).
+USER root
+RUN grafana cli plugins install volkovlabs-echarts-panel
+USER grafana
+
 COPY provisioning /etc/grafana/provisioning
 
 # Acceso publico de SOLO LECTURA + endurecimiento
