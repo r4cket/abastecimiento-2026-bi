@@ -18,18 +18,12 @@
     "list": [
       {
         "name": "servicio",
-        "label": "Servicio / Unidad",
-        "type": "query",
+        "label": "Servicio",
+        "type": "custom",
         "multi": true,
         "includeAll": true,
         "allValue": null,
-        "datasource": {
-          "type": "postgres",
-          "uid": "abastecimiento_bi"
-        },
-        "refresh": 1,
-        "sort": 1,
-        "query": "SELECT nombre FROM servicio ORDER BY nombre",
+        "query": "PABELLON,SERVICIO CLINICO CIRUGIA,SERVICIO GINECOLOGIA,SERVICIO OBSTETRICIA,SERVICIO OBSTETRICIA Y GINECOLOGIA",
         "current": {
           "text": "All",
           "value": [
@@ -439,19 +433,19 @@
     {
       "id": 8,
       "type": "barchart",
-      "title": "Cadena por servicio — top 20 por PAC modificado (unidades, Ene-Ago)",
+      "title": "Cadena por servicio (unidades, Ene-Ago)",
       "datasource": {
         "type": "postgres",
         "uid": "abastecimiento_bi"
       },
       "gridPos": {
-        "h": 14,
+        "h": 9,
         "w": 14,
         "x": 0,
         "y": 5
       },
       "options": {
-        "orientation": "horizontal",
+        "orientation": "auto",
         "xField": "servicio",
         "stacking": "none",
         "showValue": "auto",
@@ -479,7 +473,7 @@
           "refId": "A",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT servicio,\n       SUM(pac_inicial_eneago)    AS \"PAC inicial\",\n       SUM(pac_modificado_eneago) AS \"PAC modificado\",\n       SUM(cant_solicitada)       AS \"Solicitado\",\n       SUM(cant_despachada)       AS \"Despachado\"\nFROM cadena_item WHERE servicio IN (${servicio:singlequote}) GROUP BY servicio\nORDER BY SUM(pac_modificado_eneago) DESC NULLS LAST LIMIT 20",
+          "rawSql": "SELECT servicio,\n       SUM(pac_inicial_eneago)    AS \"PAC inicial\",\n       SUM(pac_modificado_eneago) AS \"PAC modificado\",\n       SUM(cant_solicitada)       AS \"Solicitado\",\n       SUM(cant_despachada)       AS \"Despachado\"\nFROM cadena_item WHERE servicio IN (${servicio:singlequote}) GROUP BY servicio ORDER BY servicio",
           "datasource": {
             "type": "postgres",
             "uid": "abastecimiento_bi"
@@ -496,7 +490,7 @@
         "uid": "abastecimiento_bi"
       },
       "gridPos": {
-        "h": 14,
+        "h": 9,
         "w": 10,
         "x": 14,
         "y": 5
@@ -548,7 +542,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 19
+        "y": 14
       },
       "panels": []
     },
@@ -564,7 +558,7 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 20
+        "y": 15
       },
       "options": {
         "showHeader": true,
@@ -631,19 +625,19 @@
     {
       "id": 12,
       "type": "barchart",
-      "title": "Variación neta del PAC por servicio (%) — top 25 por magnitud",
+      "title": "Variación neta del PAC por servicio (%)",
       "datasource": {
         "type": "postgres",
         "uid": "abastecimiento_bi"
       },
       "gridPos": {
-        "h": 13,
+        "h": 9,
         "w": 12,
         "x": 0,
-        "y": 28
+        "y": 23
       },
       "options": {
-        "orientation": "horizontal",
+        "orientation": "auto",
         "xField": "servicio",
         "stacking": "none",
         "showValue": "auto",
@@ -671,7 +665,7 @@
           "refId": "A",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT servicio, variacion_neta_pct AS \"Variación neta %\"\nFROM v_pac_reprogramacion WHERE servicio IN (${servicio:singlequote}) AND variacion_neta_pct IS NOT NULL\nORDER BY ABS(variacion_neta_pct) DESC LIMIT 25",
+          "rawSql": "SELECT servicio, variacion_neta_pct AS \"Variación neta %\"\nFROM v_pac_reprogramacion WHERE servicio IN (${servicio:singlequote}) ORDER BY servicio",
           "datasource": {
             "type": "postgres",
             "uid": "abastecimiento_bi"
@@ -682,19 +676,19 @@
     {
       "id": 13,
       "type": "barchart",
-      "title": "Ítems por tipo de cambio (apilado) — top 20 servicios",
+      "title": "Ítems por tipo de cambio (apilado)",
       "datasource": {
         "type": "postgres",
         "uid": "abastecimiento_bi"
       },
       "gridPos": {
-        "h": 13,
+        "h": 9,
         "w": 12,
         "x": 12,
-        "y": 28
+        "y": 23
       },
       "options": {
-        "orientation": "horizontal",
+        "orientation": "auto",
         "xField": "servicio",
         "stacking": "normal",
         "showValue": "auto",
@@ -722,7 +716,7 @@
           "refId": "A",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT servicio,\n       COUNT(*) FILTER (WHERE tipo_cambio='Sin cambio')            AS \"Sin cambio\",\n       COUNT(*) FILTER (WHERE tipo_cambio='Aumentó')               AS \"Aumentó\",\n       COUNT(*) FILTER (WHERE tipo_cambio='Disminuyó')             AS \"Disminuyó\",\n       COUNT(*) FILTER (WHERE tipo_cambio LIKE 'Incorporado%')     AS \"Incorporado\",\n       COUNT(*) FILTER (WHERE tipo_cambio LIKE 'Eliminado%')       AS \"Eliminado\"\nFROM pac_item WHERE servicio IN (${servicio:singlequote}) GROUP BY servicio ORDER BY COUNT(*) DESC LIMIT 20",
+          "rawSql": "SELECT servicio,\n       COUNT(*) FILTER (WHERE tipo_cambio='Sin cambio')            AS \"Sin cambio\",\n       COUNT(*) FILTER (WHERE tipo_cambio='Aumentó')               AS \"Aumentó\",\n       COUNT(*) FILTER (WHERE tipo_cambio='Disminuyó')             AS \"Disminuyó\",\n       COUNT(*) FILTER (WHERE tipo_cambio LIKE 'Incorporado%')     AS \"Incorporado\",\n       COUNT(*) FILTER (WHERE tipo_cambio LIKE 'Eliminado%')       AS \"Eliminado\"\nFROM pac_item WHERE servicio IN (${servicio:singlequote}) GROUP BY servicio ORDER BY servicio",
           "datasource": {
             "type": "postgres",
             "uid": "abastecimiento_bi"
@@ -739,14 +733,14 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 41
+        "y": 32
       },
       "panels": []
     },
     {
       "id": 15,
       "type": "timeseries",
-      "title": "Cumplimiento de despacho por mes (agregado de la selección)",
+      "title": "Cumplimiento de despacho por mes",
       "datasource": {
         "type": "postgres",
         "uid": "abastecimiento_bi"
@@ -755,7 +749,7 @@
         "h": 9,
         "w": 12,
         "x": 0,
-        "y": 42
+        "y": 33
       },
       "options": {
         "legend": {
@@ -811,7 +805,7 @@
           "refId": "A",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT date_trunc('month', periodo) AS time,\n       SUM(cant_despachada)/NULLIF(SUM(cant_solicitada),0) AS \"Cumplimiento\"\nFROM despacho_mensual WHERE servicio IN (${servicio:singlequote}) AND EXTRACT(MONTH FROM periodo)::int::text IN (${mes:singlequote})\nGROUP BY 1 ORDER BY 1",
+          "rawSql": "SELECT date_trunc('month', periodo) AS time, servicio,\n       SUM(cant_despachada)/NULLIF(SUM(cant_solicitada),0) AS cumplimiento\nFROM despacho_mensual WHERE servicio IN (${servicio:singlequote}) AND EXTRACT(MONTH FROM periodo)::int::text IN (${mes:singlequote})\nGROUP BY 1, servicio ORDER BY 1",
           "datasource": {
             "type": "postgres",
             "uid": "abastecimiento_bi"
@@ -831,7 +825,7 @@
         "h": 9,
         "w": 12,
         "x": 12,
-        "y": 42
+        "y": 33
       },
       "options": {
         "orientation": "auto",
@@ -882,7 +876,7 @@
         "h": 9,
         "w": 12,
         "x": 0,
-        "y": 51
+        "y": 42
       },
       "options": {
         "orientation": "auto",
@@ -933,7 +927,7 @@
         "h": 9,
         "w": 12,
         "x": 12,
-        "y": 51
+        "y": 42
       },
       "options": {
         "showHeader": true,
@@ -993,7 +987,7 @@
         "h": 7,
         "w": 24,
         "x": 0,
-        "y": 60
+        "y": 51
       },
       "options": {
         "showHeader": true,
@@ -1066,7 +1060,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 67
+        "y": 58
       },
       "panels": []
     },
@@ -1078,11 +1072,11 @@
         "h": 3,
         "w": 24,
         "x": 0,
-        "y": 68
+        "y": 59
       },
       "options": {
         "mode": "markdown",
-        "content": "**Lectura con cuidado:** este listado son solicitudes de compra **aún abiertas/editables** (cola de trabajo en curso), no el universo histórico. No hay fechas de cierre/adjudicación → el único tiempo medible es **Creación → Asignación a Ejecutivo**. Montos: solo los marcados confiables (Total Neto > 0). Categoría de estado y atribución de causa son **reconstruidas por regla** desde el texto del Estado (ver encabezado de `build_data_sql.py`)."
+        "content": "**Lectura con cuidado (Notas_Metodológicas):** este listado son solicitudes **aún abiertas/editables** (cola de trabajo en curso), no el universo histórico. No hay fechas de cierre/adjudicación → el único tiempo medible es **Creación → Asignación a Ejecutivo** (52/91 casos). Montos: solo los marcados confiables. **Servicio Clínico Cirugía = 2 solicitudes** (base insuficiente)."
       }
     },
     {
@@ -1097,7 +1091,7 @@
         "h": 4,
         "w": 4,
         "x": 0,
-        "y": 71
+        "y": 62
       },
       "options": {
         "reduceOptions": {
@@ -1155,7 +1149,7 @@
         "h": 4,
         "w": 5,
         "x": 4,
-        "y": 71
+        "y": 62
       },
       "options": {
         "reduceOptions": {
@@ -1221,7 +1215,7 @@
         "h": 4,
         "w": 5,
         "x": 9,
-        "y": 71
+        "y": 62
       },
       "options": {
         "reduceOptions": {
@@ -1279,7 +1273,7 @@
         "h": 4,
         "w": 5,
         "x": 14,
-        "y": 71
+        "y": 62
       },
       "options": {
         "reduceOptions": {
@@ -1337,7 +1331,7 @@
         "h": 4,
         "w": 5,
         "x": 19,
-        "y": 71
+        "y": 62
       },
       "options": {
         "reduceOptions": {
@@ -1395,7 +1389,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 75
+        "y": 66
       },
       "options": {
         "showHeader": true,
@@ -1455,7 +1449,7 @@
         "h": 9,
         "w": 12,
         "x": 12,
-        "y": 75
+        "y": 66
       },
       "options": {
         "orientation": "auto",
@@ -1506,7 +1500,7 @@
         "h": 9,
         "w": 12,
         "x": 0,
-        "y": 83
+        "y": 74
       },
       "options": {
         "orientation": "horizontal",
@@ -1557,7 +1551,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 83
+        "y": 74
       },
       "options": {
         "showHeader": true,
@@ -1614,7 +1608,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 91
+        "y": 82
       },
       "panels": []
     },
@@ -1630,7 +1624,7 @@
         "h": 11,
         "w": 24,
         "x": 0,
-        "y": 92
+        "y": 83
       },
       "options": {
         "showHeader": true,
@@ -1706,7 +1700,7 @@
         "h": 11,
         "w": 24,
         "x": 0,
-        "y": 103
+        "y": 94
       },
       "options": {
         "showHeader": true,
@@ -1782,7 +1776,7 @@
         "h": 11,
         "w": 24,
         "x": 0,
-        "y": 114
+        "y": 105
       },
       "options": {
         "showHeader": true,
@@ -1890,7 +1884,7 @@
         "h": 11,
         "w": 24,
         "x": 0,
-        "y": 125
+        "y": 116
       },
       "options": {
         "showHeader": true,
@@ -1966,7 +1960,7 @@
         "h": 11,
         "w": 24,
         "x": 0,
-        "y": 136
+        "y": 127
       },
       "options": {
         "showHeader": true,
@@ -2026,7 +2020,7 @@
         "h": 11,
         "w": 24,
         "x": 0,
-        "y": 147
+        "y": 138
       },
       "options": {
         "showHeader": true,
@@ -2086,7 +2080,7 @@
         "h": 11,
         "w": 24,
         "x": 0,
-        "y": 158
+        "y": 149
       },
       "options": {
         "showHeader": true,
@@ -2127,107 +2121,6 @@
           "format": "table",
           "rawQuery": true,
           "rawSql": "SELECT servicio AS \"Servicio\", codigo_cgcom AS \"Código\", descripcion AS \"Descripción\",\n       um AS \"UM\", cant_solicitada AS \"Solicitado\", cant_despachada AS \"Despachado\",\n       cumplimiento_pct AS \"Cumplimiento %\"\nFROM v_demanda_no_planificada WHERE servicio IN (${servicio:singlequote})\nORDER BY cant_solicitada DESC LIMIT 60",
-          "datasource": {
-            "type": "postgres",
-            "uid": "abastecimiento_bi"
-          }
-        }
-      ]
-    },
-    {
-      "id": 39,
-      "type": "row",
-      "title": "Vistas ampliadas (ECharts) — todas las unidades",
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 169
-      },
-      "panels": []
-    },
-    {
-      "id": 40,
-      "type": "volkovlabs-echarts-panel",
-      "title": "Mapa de volumen — unidades solicitadas Ene-Ago por unidad (área ∝ cantidad)",
-      "datasource": {
-        "type": "postgres",
-        "uid": "abastecimiento_bi"
-      },
-      "gridPos": {
-        "h": 15,
-        "w": 24,
-        "x": 0,
-        "y": 170
-      },
-      "options": {
-        "getOption": "const s=(context.panel.data.series||[])[0];if(!s||!s.fields||!s.fields.length){return {title:{text:'sin datos',left:'center',top:'center'}};}const col={};s.fields.forEach(fx=>{col[fx.name]=(fx.values&&fx.values.toArray)?fx.values.toArray():(fx.values||[]);});const C=s.fields.map(fx=>fx.name);const N=col[C[0]]||[],V=(col[C[1]]||[]).map(Number);const data=N.map((n,i)=>({name:String(n),value:V[i]||0})).filter(d=>d.value>0).sort((a,b)=>b.value-a.value);return {tooltip:{formatter:p=>p.name+': '+(p.value||0).toLocaleString('es-CL')},series:[{type:'treemap',roam:false,nodeClick:false,breadcrumb:{show:false},label:{show:true,formatter:'{b}',fontSize:10,overflow:'truncate'},itemStyle:{borderColor:'#fff',borderWidth:1,gapWidth:1},levels:[{color:['#3b82f6','#22c55e','#f59e0b','#ef4444','#8b5cf6','#14b8a6']}],data:data}]};",
-        "renderer": "canvas",
-        "themeEditor": {
-          "config": {},
-          "name": "default"
-        },
-        "editor": {
-          "format": "auto",
-          "height": 600
-        },
-        "visualEditor": {
-          "code": "",
-          "dataset": [],
-          "series": []
-        }
-      },
-      "targets": [
-        {
-          "refId": "A",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "SELECT servicio AS unidad, SUM(cant_solicitada) AS valor\nFROM cadena_item WHERE servicio IN (${servicio:singlequote})\nGROUP BY servicio HAVING SUM(cant_solicitada) > 0\nORDER BY valor DESC",
-          "datasource": {
-            "type": "postgres",
-            "uid": "abastecimiento_bi"
-          }
-        }
-      ]
-    },
-    {
-      "id": 41,
-      "type": "volkovlabs-echarts-panel",
-      "title": "Cumplimiento de despacho — unidad × mes (top 35 por volumen solicitado)",
-      "datasource": {
-        "type": "postgres",
-        "uid": "abastecimiento_bi"
-      },
-      "gridPos": {
-        "h": 20,
-        "w": 24,
-        "x": 0,
-        "y": 185
-      },
-      "options": {
-        "getOption": "const s=(context.panel.data.series||[])[0];if(!s||!s.fields||!s.fields.length){return {title:{text:'sin datos',left:'center',top:'center'}};}const col={};s.fields.forEach(fx=>{col[fx.name]=(fx.values&&fx.values.toArray)?fx.values.toArray():(fx.values||[]);});const C=s.fields.map(fx=>fx.name);const U=(col[C[0]]||[]).map(String),M=(col[C[1]]||[]).map(String),V=(col[C[2]]||[]).map(Number);const xs=[...new Set(M)],ys=[...new Set(U)];const data=U.map((u,i)=>[xs.indexOf(M[i]),ys.indexOf(u),V[i]]);return {tooltip:{position:'top',formatter:p=>ys[p.value[1]]+' / '+xs[p.value[0]]+': '+(p.value[2]*100).toFixed(0)+'%'},grid:{left:170,right:16,top:8,bottom:56},xAxis:{type:'category',data:xs,splitArea:{show:true}},yAxis:{type:'category',data:ys,inverse:true,splitArea:{show:true},axisLabel:{fontSize:10}},visualMap:{min:0,max:1,calculable:true,orient:'horizontal',left:'center',bottom:4,text:['100%','0%'],inRange:{color:['#d73027','#fee08b','#1a9850']}},series:[{type:'heatmap',data:data,progressive:0,emphasis:{itemStyle:{shadowBlur:6,shadowColor:'rgba(0,0,0,0.3)'}}}]};",
-        "renderer": "canvas",
-        "themeEditor": {
-          "config": {},
-          "name": "default"
-        },
-        "editor": {
-          "format": "auto",
-          "height": 600
-        },
-        "visualEditor": {
-          "code": "",
-          "dataset": [],
-          "series": []
-        }
-      },
-      "targets": [
-        {
-          "refId": "A",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "WITH top AS (\n       SELECT servicio, SUM(cant_solicitada) AS sol\n       FROM despacho_mensual WHERE servicio IN (${servicio:singlequote})\n       GROUP BY servicio ORDER BY sol DESC LIMIT 35)\nSELECT dm.servicio AS unidad,\n       to_char(dm.periodo,'YYYY-MM') AS mes,\n       ROUND(SUM(dm.cant_despachada)/NULLIF(SUM(dm.cant_solicitada),0), 4) AS cumplimiento\nFROM despacho_mensual dm JOIN top t ON t.servicio = dm.servicio\nWHERE EXTRACT(MONTH FROM periodo)::int::text IN (${mes:singlequote})\nGROUP BY dm.servicio, dm.periodo, t.sol\nORDER BY t.sol DESC, dm.periodo",
           "datasource": {
             "type": "postgres",
             "uid": "abastecimiento_bi"

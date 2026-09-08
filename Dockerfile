@@ -6,13 +6,6 @@
 # Ver README-PUBLICAR.md.
 FROM grafana/grafana-oss:11.2.0
 
-# Panel ECharts (Volkov Labs, firmado) horneado en la imagen -> no depende de red
-# en el arranque. Version PINNEADA a 6.6.0: es la ultima que soporta Grafana 11
-# (grafanaDependency >=10.0.0). Las 7.x piden Grafana >=12.3 y no cargarian aca.
-USER root
-RUN grafana cli plugins install volkovlabs-echarts-panel 6.6.0
-USER grafana
-
 COPY provisioning /etc/grafana/provisioning
 
 # Acceso publico de SOLO LECTURA + endurecimiento
