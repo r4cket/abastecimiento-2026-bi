@@ -125,8 +125,10 @@ py build_data_sql.py --public      # regenera bi/deploy/sql/02_data_public.sql (
 py build_dashboard.py              # si cambiaste paneles
 ```
 
-`02_data_public.sql` pesa ~5 MB (todas las unidades) — **no se puede pegar en el
-SQL Editor de Neon**. Cargá por `psql` (el del stack portátil sirve):
+Con los 4 servicios `02_data_public.sql` pesa ~0,7 MB y **se puede pegar** en el
+SQL Editor de Neon (primero `01_schema.sql`, después el data). Si algún día se
+activa el modo "todas las unidades" (`SOLO_4 = False`) el archivo pasa a ~5 MB y
+ya no entra en el editor web — ahí cargá por `psql` (el del stack portátil sirve):
 
 ```powershell
 $psql = 'C:\Users\usuario_minsal\hospital-bi-local\pgsql\bin\psql.exe'
