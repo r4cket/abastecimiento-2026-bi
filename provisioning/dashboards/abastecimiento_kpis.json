@@ -749,13 +749,13 @@
       },
       "options": {
         "mode": "markdown",
-        "content": "Usá el filtro **Servicio** de arriba para ver **una unidad a la vez**. Con «All» seleccionado, el gráfico de líneas muestra una línea por servicio; el resto de los paneles suman los servicios elegidos."
+        "content": "Usá el filtro **Servicio** de arriba para ver **una unidad a la vez** (o varias). Todos los paneles de esta sección responden a ese filtro: la línea de cumplimiento y las barras son del servicio o servicios elegidos."
       }
     },
     {
       "id": 16,
       "type": "timeseries",
-      "title": "Cumplimiento de despacho por mes y servicio",
+      "title": "Cumplimiento de despacho por mes",
       "datasource": {
         "type": "postgres",
         "uid": "abastecimiento_bi"
@@ -789,7 +789,7 @@
           "custom": {
             "drawStyle": "line",
             "lineInterpolation": "linear",
-            "fillOpacity": 0,
+            "fillOpacity": 12,
             "showPoints": "always",
             "pointSize": 6,
             "lineWidth": 2,
@@ -827,7 +827,7 @@
           "refId": "A",
           "format": "time_series",
           "rawQuery": true,
-          "rawSql": "SELECT date_trunc('month', periodo) AS time,\n       servicio AS metric,\n       ROUND(SUM(cant_despachada) / NULLIF(SUM(cant_solicitada), 0), 4) AS \"Cumplimiento\"\nFROM despacho_mensual WHERE servicio IN (${servicio:singlequote}) AND EXTRACT(MONTH FROM periodo)::int::text IN (${mes:singlequote})\nGROUP BY 1, servicio ORDER BY 1, servicio",
+          "rawSql": "SELECT date_trunc('month', periodo) AS time,\n       ROUND(SUM(cant_despachada) / NULLIF(SUM(cant_solicitada), 0), 4) AS \"Cumplimiento\"\nFROM despacho_mensual WHERE servicio IN (${servicio:singlequote}) AND EXTRACT(MONTH FROM periodo)::int::text IN (${mes:singlequote})\nGROUP BY 1 ORDER BY 1",
           "datasource": {
             "type": "postgres",
             "uid": "abastecimiento_bi"
