@@ -18,11 +18,12 @@
     "list": [
       {
         "name": "servicio",
-        "label": "Servicio",
+        "label": "Servicio / unidad",
         "type": "custom",
         "multi": true,
         "includeAll": true,
         "allValue": null,
+        "description": "Filtra TODO el tablero. Las 4 unidades clínicas + la combinada Obst.+Gineco (solo Compras).",
         "query": "PABELLON,SERVICIO CLINICO CIRUGIA,SERVICIO GINECOLOGIA,SERVICIO OBSTETRICIA,SERVICIO OBSTETRICIA Y GINECOLOGIA",
         "current": {
           "text": "All",
@@ -297,7 +298,7 @@
     {
       "id": 6,
       "type": "stat",
-      "title": "Reprogramación PAC (Mod/Ini − 1)",
+      "title": "Reprogramación PAC anual (Mod/Ini − 1)",
       "datasource": {
         "type": "postgres",
         "uid": "abastecimiento_bi"
@@ -352,7 +353,7 @@
           "refId": "A",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT SUM(pac_modificado_eneago)/NULLIF(SUM(pac_inicial_eneago),0)-1 AS v FROM cadena_item WHERE servicio IN (${servicio:singlequote})",
+          "rawSql": "SELECT SUM(cant_modificado_anual)/NULLIF(SUM(cant_inicial_anual),0)-1 AS v FROM pac_item WHERE servicio IN (${servicio:singlequote})",
           "datasource": {
             "type": "postgres",
             "uid": "abastecimiento_bi"
