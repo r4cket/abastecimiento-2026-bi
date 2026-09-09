@@ -739,17 +739,32 @@
     },
     {
       "id": 15,
+      "type": "text",
+      "title": "",
+      "gridPos": {
+        "h": 2,
+        "w": 24,
+        "x": 0,
+        "y": 33
+      },
+      "options": {
+        "mode": "markdown",
+        "content": "Usá el filtro **Servicio** de arriba para ver **una unidad a la vez**. Con «All» seleccionado, el gráfico de líneas muestra una línea por servicio; el resto de los paneles suman los servicios elegidos."
+      }
+    },
+    {
+      "id": 16,
       "type": "timeseries",
-      "title": "Cumplimiento de despacho por mes",
+      "title": "Cumplimiento de despacho por mes y servicio",
       "datasource": {
         "type": "postgres",
         "uid": "abastecimiento_bi"
       },
       "gridPos": {
-        "h": 9,
+        "h": 11,
         "w": 12,
         "x": 0,
-        "y": 33
+        "y": 35
       },
       "options": {
         "legend": {
@@ -763,23 +778,30 @@
           ]
         },
         "tooltip": {
-          "mode": "multi"
+          "mode": "multi",
+          "sort": "desc"
         }
       },
       "fieldConfig": {
         "defaults": {
           "unit": "percentunit",
-          "decimals": 1,
+          "decimals": 0,
           "custom": {
             "drawStyle": "line",
-            "fillOpacity": 10,
-            "showPoints": "auto",
+            "lineInterpolation": "linear",
+            "fillOpacity": 0,
+            "showPoints": "always",
+            "pointSize": 6,
             "lineWidth": 2,
             "spanNulls": true,
+            "axisLabel": "",
+            "axisPlacement": "auto",
             "thresholdsStyle": {
               "mode": "line"
             }
           },
+          "min": 0.5,
+          "max": 1,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -803,9 +825,9 @@
       "targets": [
         {
           "refId": "A",
-          "format": "table",
+          "format": "time_series",
           "rawQuery": true,
-          "rawSql": "SELECT date_trunc('month', periodo) AS time, servicio,\n       SUM(cant_despachada)/NULLIF(SUM(cant_solicitada),0) AS cumplimiento\nFROM despacho_mensual WHERE servicio IN (${servicio:singlequote}) AND EXTRACT(MONTH FROM periodo)::int::text IN (${mes:singlequote})\nGROUP BY 1, servicio ORDER BY 1",
+          "rawSql": "SELECT date_trunc('month', periodo) AS time,\n       servicio AS metric,\n       ROUND(SUM(cant_despachada) / NULLIF(SUM(cant_solicitada), 0), 4) AS \"Cumplimiento\"\nFROM despacho_mensual WHERE servicio IN (${servicio:singlequote}) AND EXTRACT(MONTH FROM periodo)::int::text IN (${mes:singlequote})\nGROUP BY 1, servicio ORDER BY 1, servicio",
           "datasource": {
             "type": "postgres",
             "uid": "abastecimiento_bi"
@@ -814,18 +836,18 @@
       ]
     },
     {
-      "id": 16,
+      "id": 17,
       "type": "barchart",
-      "title": "Solicitado vs. Despachado por mes",
+      "title": "Solicitado vs. Despachado por mes (suma de los servicios elegidos)",
       "datasource": {
         "type": "postgres",
         "uid": "abastecimiento_bi"
       },
       "gridPos": {
-        "h": 9,
+        "h": 11,
         "w": 12,
         "x": 12,
-        "y": 33
+        "y": 35
       },
       "options": {
         "orientation": "auto",
@@ -865,7 +887,7 @@
       ]
     },
     {
-      "id": 17,
+      "id": 18,
       "type": "barchart",
       "title": "Brecha (Solicitado − Despachado) por mes",
       "datasource": {
@@ -876,7 +898,7 @@
         "h": 9,
         "w": 12,
         "x": 0,
-        "y": 42
+        "y": 46
       },
       "options": {
         "orientation": "auto",
@@ -916,7 +938,7 @@
       ]
     },
     {
-      "id": 18,
+      "id": 19,
       "type": "table",
       "title": "Despacho por bodega",
       "datasource": {
@@ -927,7 +949,7 @@
         "h": 9,
         "w": 12,
         "x": 12,
-        "y": 42
+        "y": 46
       },
       "options": {
         "showHeader": true,
@@ -976,7 +998,7 @@
       ]
     },
     {
-      "id": 19,
+      "id": 20,
       "type": "table",
       "title": "Cumplimiento por servicio (Ene-Ago)",
       "datasource": {
@@ -987,7 +1009,7 @@
         "h": 7,
         "w": 24,
         "x": 0,
-        "y": 51
+        "y": 55
       },
       "options": {
         "showHeader": true,
@@ -1052,7 +1074,7 @@
       ]
     },
     {
-      "id": 20,
+      "id": 21,
       "type": "row",
       "title": "Compras — solicitudes de compra (Abr-Ago 2026)",
       "collapsed": false,
@@ -1060,19 +1082,19 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 58
+        "y": 62
       },
       "panels": []
     },
     {
-      "id": 21,
+      "id": 22,
       "type": "text",
       "title": "",
       "gridPos": {
         "h": 3,
         "w": 24,
         "x": 0,
-        "y": 59
+        "y": 63
       },
       "options": {
         "mode": "markdown",
@@ -1080,7 +1102,7 @@
       }
     },
     {
-      "id": 22,
+      "id": 23,
       "type": "stat",
       "title": "Solicitudes de compra",
       "datasource": {
@@ -1091,7 +1113,7 @@
         "h": 4,
         "w": 4,
         "x": 0,
-        "y": 62
+        "y": 66
       },
       "options": {
         "reduceOptions": {
@@ -1138,7 +1160,7 @@
       ]
     },
     {
-      "id": 23,
+      "id": 24,
       "type": "stat",
       "title": "% en estados problemáticos",
       "datasource": {
@@ -1149,7 +1171,7 @@
         "h": 4,
         "w": 5,
         "x": 4,
-        "y": 62
+        "y": 66
       },
       "options": {
         "reduceOptions": {
@@ -1204,7 +1226,7 @@
       ]
     },
     {
-      "id": 24,
+      "id": 25,
       "type": "stat",
       "title": "Días prom. Creación→Asignación",
       "datasource": {
@@ -1215,7 +1237,7 @@
         "h": 4,
         "w": 5,
         "x": 9,
-        "y": 62
+        "y": 66
       },
       "options": {
         "reduceOptions": {
@@ -1262,7 +1284,7 @@
       ]
     },
     {
-      "id": 25,
+      "id": 26,
       "type": "stat",
       "title": "Monto total (confiable, $)",
       "datasource": {
@@ -1273,7 +1295,7 @@
         "h": 4,
         "w": 5,
         "x": 14,
-        "y": 62
+        "y": 66
       },
       "options": {
         "reduceOptions": {
@@ -1320,7 +1342,7 @@
       ]
     },
     {
-      "id": 26,
+      "id": 27,
       "type": "stat",
       "title": "Solicitudes cerradas (cód. MP)",
       "datasource": {
@@ -1331,7 +1353,7 @@
         "h": 4,
         "w": 5,
         "x": 19,
-        "y": 62
+        "y": 66
       },
       "options": {
         "reduceOptions": {
@@ -1378,7 +1400,7 @@
       ]
     },
     {
-      "id": 27,
+      "id": 28,
       "type": "table",
       "title": "Compras por estado",
       "datasource": {
@@ -1389,7 +1411,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 66
+        "y": 70
       },
       "options": {
         "showHeader": true,
@@ -1438,7 +1460,7 @@
       ]
     },
     {
-      "id": 28,
+      "id": 29,
       "type": "barchart",
       "title": "Evolución mensual por estado (apilado)",
       "datasource": {
@@ -1449,7 +1471,7 @@
         "h": 9,
         "w": 12,
         "x": 12,
-        "y": 66
+        "y": 70
       },
       "options": {
         "orientation": "auto",
@@ -1489,7 +1511,7 @@
       ]
     },
     {
-      "id": 29,
+      "id": 30,
       "type": "barchart",
       "title": "Atribución de causa — solicitudes problemáticas",
       "datasource": {
@@ -1500,7 +1522,7 @@
         "h": 9,
         "w": 12,
         "x": 0,
-        "y": 74
+        "y": 78
       },
       "options": {
         "orientation": "horizontal",
@@ -1540,7 +1562,7 @@
       ]
     },
     {
-      "id": 30,
+      "id": 31,
       "type": "table",
       "title": "Compras por servicio",
       "datasource": {
@@ -1551,7 +1573,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 74
+        "y": 78
       },
       "options": {
         "showHeader": true,
@@ -1600,7 +1622,7 @@
       ]
     },
     {
-      "id": 31,
+      "id": 32,
       "type": "row",
       "title": "Ítems críticos (base Ene-Ago; el filtro Mes no aplica)",
       "collapsed": false,
@@ -1608,12 +1630,12 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 82
+        "y": 86
       },
       "panels": []
     },
     {
-      "id": 32,
+      "id": 33,
       "type": "table",
       "title": "Casos de doble reprogramación (Inicial→Modificado→Solicitud)",
       "datasource": {
@@ -1624,7 +1646,7 @@
         "h": 11,
         "w": 24,
         "x": 0,
-        "y": 83
+        "y": 87
       },
       "options": {
         "showHeader": true,
@@ -1689,7 +1711,7 @@
       ]
     },
     {
-      "id": 33,
+      "id": 34,
       "type": "table",
       "title": "Mayor brecha de despacho (demanda no satisfecha, unidades)",
       "datasource": {
@@ -1700,7 +1722,7 @@
         "h": 11,
         "w": 24,
         "x": 0,
-        "y": 94
+        "y": 98
       },
       "options": {
         "showHeader": true,
@@ -1765,7 +1787,7 @@
       ]
     },
     {
-      "id": 34,
+      "id": 35,
       "type": "table",
       "title": "Ítems de mayor valor económico (precio ref × cantidad, Ene-Ago)",
       "datasource": {
@@ -1776,7 +1798,7 @@
         "h": 11,
         "w": 24,
         "x": 0,
-        "y": 105
+        "y": 109
       },
       "options": {
         "showHeader": true,
@@ -1873,7 +1895,7 @@
       ]
     },
     {
-      "id": 35,
+      "id": 36,
       "type": "table",
       "title": "Solicitados muy por encima del PAC modificado (≥30%, con volumen)",
       "datasource": {
@@ -1884,7 +1906,7 @@
         "h": 11,
         "w": 24,
         "x": 0,
-        "y": 116
+        "y": 120
       },
       "options": {
         "showHeader": true,
@@ -1949,7 +1971,7 @@
       ]
     },
     {
-      "id": 36,
+      "id": 37,
       "type": "table",
       "title": "Planificados pero nunca solicitados (sobre-planificación)",
       "datasource": {
@@ -1960,7 +1982,7 @@
         "h": 11,
         "w": 24,
         "x": 0,
-        "y": 127
+        "y": 131
       },
       "options": {
         "showHeader": true,
@@ -2009,7 +2031,7 @@
       ]
     },
     {
-      "id": 37,
+      "id": 38,
       "type": "table",
       "title": "Quiebre de stock recurrente (brecha de despacho en 3+ meses)",
       "datasource": {
@@ -2020,7 +2042,7 @@
         "h": 11,
         "w": 24,
         "x": 0,
-        "y": 138
+        "y": 142
       },
       "options": {
         "showHeader": true,
@@ -2069,7 +2091,7 @@
       ]
     },
     {
-      "id": 38,
+      "id": 39,
       "type": "table",
       "title": "Demanda no planificada (solicitado sin estar en ningún PAC)",
       "datasource": {
@@ -2080,7 +2102,7 @@
         "h": 11,
         "w": 24,
         "x": 0,
-        "y": 149
+        "y": 153
       },
       "options": {
         "showHeader": true,
